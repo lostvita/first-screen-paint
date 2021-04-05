@@ -44,6 +44,7 @@ const $fstp = (function() {
 			let iso = new IntersectionObserver((entries) => {
 				entries.forEach((entry) => {
 					// 屏内元素
+					console.log(entry.intersectionRatio, entry.target, entry.time)
 					if (entry.intersectionRatio > 0) {
 						this._updateFstDur(entry.time);
 						if (imgTagReg.test(entry.target.nodeName)) {
@@ -78,6 +79,7 @@ const $fstp = (function() {
 				const entries = list.getEntriesByType('resource');
 				entries.forEach((item) => {
 					// 滚动之后触发的请求忽略
+					console.log(item.name, item.responseEnd)
 					if (_global._stopFlag && item.fetchStart > _global._stopTime) return;
 					if (imgResourceList.has(item.name)) {
 						this._updateFstDur(item.responseEnd);

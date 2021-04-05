@@ -1,0 +1,33 @@
+{
+  "name": "first-screen-time",
+  "version": "1.0.0",
+  "description": "auto compute first screen time",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack serve --config ./script/webpack.config.js & open 'http://localhost:8080/example/'",
+    "build": "cross-env NODE_ENV=production webpack --config ./script/webpack.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qiudongwei/first-screen-time.git"
+  },
+  "keywords": [
+    "performance",
+    "first",
+    "screen",
+    "time"
+  ],
+  "author": "wilton",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qiudongwei/first-screen-time/issues"
+  },
+  "homepage": "https://github.com/qiudongwei/first-screen-time#readme",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "webpack": "^5.30.0",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
