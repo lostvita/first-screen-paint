@@ -6,6 +6,7 @@
 
 const ignoreTagReg = /style|script|link|br/i;
 const imgTagReg = /img/i;
+const imgBgUrlReg = /(?<=^url\([\'\"]?)\S+(?=[\'\"]?\)$)/g
 
 const isSupport =
 	window.performance &&
@@ -47,9 +48,8 @@ const $fstp = (function() {
 					console.log(entry.intersectionRatio, entry.target, entry.time)
 					if (entry.intersectionRatio > 0) {
 						this._updateFstDur(entry.time);
-						if (imgTagReg.test(entry.target.nodeName)) {
-							imgResourceList.add(entry.target.getAttribute('data-src'));
-						}
+						const src = this._getImgSrc(entry.target)
+						src && imgResourceList.add(src);
 					}
 				});
 			});
@@ -110,6 +110,17 @@ const $fstp = (function() {
 			_global.$muo.disconnect();
 			_global.$iso.disconnect();
 			_global.$perf.disconnect();
+		},
+		_getImgSrc(dom) {
+			if (imgTagReg.test(dom)) {
+				entry.target.getAttribute('data-src')
+			} else {
+				const computedStyle = window.getComputedStyle(dom);
+				const bgImg = computedStyle.getPropertyValue('background-image') || computedStyle.getPropertyValue('background');
+				const matches = bgImg.replace(/[\'\"]?/g, '').match(imgBgUrlReg)
+				console.log(bgImg, matches)
+				return matches ? matches[0] : null
+			}
 		},
 		run() {
 			this._initConfig();
