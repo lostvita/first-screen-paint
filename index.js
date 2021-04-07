@@ -1,7 +1,7 @@
 /*
  * @Author: Wilton.Qiu
  * @Date: 2021-03-29 15:50:50
- * @Description: first screen time Api
+ * @Description: first screen time api
  */
 
 const ignoreTagReg = /style|script|link|br/i;
@@ -45,7 +45,6 @@ const $fstp = (function() {
 			let iso = new IntersectionObserver((entries) => {
 				entries.forEach((entry) => {
 					// 屏内元素
-					console.log(entry.intersectionRatio, entry.target, entry.time)
 					if (entry.intersectionRatio > 0) {
 						this._updateFstDur(entry.time);
 						const src = this._getImgSrc(entry.target)
@@ -118,11 +117,11 @@ const $fstp = (function() {
 				const computedStyle = window.getComputedStyle(dom);
 				const bgImg = computedStyle.getPropertyValue('background-image') || computedStyle.getPropertyValue('background');
 				const matches = bgImg.replace(/[\'\"]?/g, '').match(imgBgUrlReg)
-				console.log(bgImg, matches)
 				return matches ? matches[0] : null
 			}
 		},
 		run() {
+			console.log(performance.now())
 			this._initConfig();
 			this._initIsObserver();
 			this._initMuObserver();
@@ -157,7 +156,7 @@ const $fstp = (function() {
 		},
 		getRequestTime(format, delay = 5000, stop = true) {
 			if (!(format instanceof RegExp)) {
-				warn('missing format or format should be a Regexp.');
+				warn('missing format or format should be a regexp.');
 				return;
 			}
 			return new Promise((resolve, reject) => {
