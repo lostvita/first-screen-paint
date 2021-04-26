@@ -4,15 +4,18 @@
  * @Description: first screen time api
  */
 
-const ignoreTagReg = /style|script|link|br/i;
-const imgTagReg = /img/i;
-const imgBgUrlReg = /(?<=^url\([\'\"]?)\S+(?=[\'\"]?\)$)/g
-
 const isSupport =
-	window.performance &&
+	!!(window.performance &&
 	window.PerformanceObserver &&
 	window.IntersectionObserver &&
-	window.MutationObserver;
+	window.MutationObserver);
+
+// if (!isSupport) return
+// console.log(isSupport)
+
+const ignoreTagReg = /style|script|link|br/i;
+const imgTagReg = /img/i;
+const imgBgUrlReg = /(?<=^url\([\'\"]?).+(?=[\'\"]?\)$)/g
 
 let imgResourceList = new Set();
 let resourcePerfList = new Set();
@@ -121,7 +124,10 @@ const $fstp = (function() {
 			}
 		},
 		run() {
-			console.log(performance.now())
+			if (!isSupport) {
+				warn("current browser doesn't support performance.");
+				return;
+			}
 			this._initConfig();
 			this._initIsObserver();
 			this._initMuObserver();
@@ -195,6 +201,10 @@ const $fstp = (function() {
 			});
 		},
 		reopen(ele = document) {
+			if (!isSupport) {
+				warn("current browser doesn't support performance.");
+				return;
+			}
 			_global._stopFlag = false;
 			utils._updateFstStart();
 			utils._setFstDur(0);

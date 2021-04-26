@@ -8,7 +8,7 @@
     "build": "cross-env NODE_ENV=production webpack --config ./script/webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "rb": "rollup -c --environment NODE_ENV:production",
-    "rd": "rollup -c  --watch"
+    "serve": "rollup -c  --watch"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,8 @@
     "@babel/preset-env": "^7.13.12",
     "@rollup/plugin-babel": "^5.3.0",
     "cross-env": "^7.0.3",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-serve": "^1.1.0",
     "rollup-plugin-uglify": "^6.0.4",
     "webpack": "^5.30.0",
     "webpack-cli": "^4.6.0",
