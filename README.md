@@ -19,7 +19,7 @@ npm run dev
 import 'first-screen-paint'
 
 // or add as a script
-<script src="./first-screen-time/dist/index.js"></script>
+<script src="./first-screen-paint/dist/index.js"></script>
 
 // Obtain the FSP time anywhere
 if (window.$fstp) {
@@ -30,6 +30,8 @@ if (window.$fstp) {
 ```
 
 ## Api
-- getFirstScreenTime
-- getRequestTime
-- reopen
+api | desc | params
+----- | ----- | -----
+getFirstScreenTime | obtian FSP time | delay:[Number]5000(default), stop: [Bollean]true(default)
+getRequestTime | obtain resource time with white list | format: [RegExp], delay:[Number]5000(default), stop: [Bollean]true(default)
+reopen | reopen listiner | ele: [Element]document(default)
