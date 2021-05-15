@@ -4,11 +4,10 @@
   "description": "auto compute first screen time",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack serve --config ./script/webpack.config.js & open 'http://localhost:8080/example/'",
-    "build": "cross-env NODE_ENV=production webpack --config ./script/webpack.config.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "rb": "rollup -c --environment NODE_ENV:production",
-    "serve": "rollup -c  --watch"
+    "dev": "rollup -c  --watch",
+    "serve": "rollup -c  --watch",
+    "build": "rollup -c --environment NODE_ENV:production",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

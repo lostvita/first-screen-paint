@@ -2,7 +2,7 @@ import { isSupport, warn, getImgSrc } from './util'
 
 const ignoreTagReg = /style|script|link|br/i;
 
-class FstPerform {
+class FspPerform {
   constructor() {
     this.$data = {};
 		this.$iso = null;
@@ -10,40 +10,41 @@ class FstPerform {
 		this.$perf = null
     this._stopFlag = false;
 		this._stopTime = 0;
-		this._stepTime = 0;
+    this._stepTime = 0; // record step time from timeorigin
 		this._timeOrigin = null;
-    this._imgResourceList = new Set();
-    this._resourcePerfList = new Set();
+    this._imgUrlList = new Set();
+    this._resourceList = new Set();
     this.init()
   }
-  _initConfig() {
+  initConfig() {
     this._stopFlag = false;
     this._timeOrigin = performance.timeOrigin;
-    // 首屏渲染时间
-    let fst = { start: this._timeOrigin, end: null, duration: 0 };
-    this.$data = { fst };
+    // the first screen paint time
+    let fspTime = { start: this._timeOrigin, end: null, duration: 0 };
+    this.$data = { fspt: fspTime };
   }
-  _initIsObserver() {
+  initIsObserver() {
     let iso = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        // 屏内元素
+        // element in viewport
         if (entry.intersectionRatio > 0) {
-          this._updateFstDur(entry.time);
+          this.updateFspTime({ duration: entry.time })
+          // collect img url
           const src = getImgSrc(entry.target)
-          src && this._imgResourceList.add(src);
+          src && this._imgUrlList.add(src);
         }
       });
     });
     this.$iso = iso;
   }
-  _initMuObserver() {
+  initMuObserver() {
     const muo = new MutationObserver((mutations) => {
       if (!mutations) return;
       mutations.forEach((mu) => {
         if (!mu.addedNodes || !mu.addedNodes.length) return;
         mu.addedNodes.forEach((ele) => {
           if (ele.nodeType === 1 && !ignoreTagReg.test(ele.nodeName)) {
-            // 监听可视性变化
+            // listening element visibility
             this.$iso.observe(ele);
           }
         });
@@ -55,36 +56,35 @@ class FstPerform {
     });
     this.$muo = muo;
   }
-  _initPerfObserver() {
+  initPerfObserver() {
     const perf = new PerformanceObserver((list) => {
       const entries = list.getEntriesByType('resource');
       entries.forEach((item) => {
-        // 滚动之后触发的请求忽略
-        console.log(item.name, item.responseEnd)
+        // ignore resources emitted after scroll
         if (this._stopFlag && item.fetchStart > this._stopTime) return;
-        if (this._imgResourceList.has(item.name)) {
-          this._updateFstDur(item.responseEnd);
-          this._imgResourceList.delete(item.name);
+        if (this._imgUrlList.has(item.name)) {
+          this.updateFspTime({ duration: item.responseEnd });
+          this._imgUrlList.delete(item.name);
         }
-        this._resourcePerfList.add(item);
+        // collect all recouses
+        this._resourceList.add(item);
       });
     });
     perf.observe({ entryTypes: ['resource'] });
     this.$perf = perf;
   }
-  _updateFstStart() {
-    this._stepTime = performance.now();
-    this.$data.fst.start = this._timeOrigin + this._stepTime;
+  updateFspTime(data = {}) {
+    if (data.start) {
+      this._stepTime = data.start;
+      data.start += this._timeOrigin;
+    }
+    if (data.duration) {
+      data.duration -= this._stepTime;
+      data.duration = Math.max(data.duration, this.$data.fspt.duration)
+    }
+    Object.assign(this.$data.fspt, data)
   }
-  _setFstDur(dur) {
-    this.$data.fst.duration = dur;
-  }
-  _updateFstDur(dur) {
-    dur -= this._stepTime;
-    const d = this.$data.fst.duration;
-    this.$data.fst.duration = Math.max(d, dur);
-  }
-  _stopObserver() {
+  stopObserver() {
     if (this._stopFlag) return;
     this._stopTime = performance.now();
     this._stopFlag = true;
@@ -97,31 +97,27 @@ class FstPerform {
       warn("current browser doesn't support performance.");
       return;
     }
-    this._initConfig();
-    this._initIsObserver();
-    this._initMuObserver();
-    this._initPerfObserver();
+    this.initConfig();
+    this.initIsObserver();
+    this.initMuObserver();
+    this.initPerfObserver();
 
     window.addEventListener(
       'scroll',
       () => {
-        this._stopObserver();
+        this.stopObserver();
       },
       { capture: true, once: true }
     );
   }
   getFirstScreenTime(delay = 5000, stop = true) {
     return new Promise((resolve, reject) => {
-      // if (!isSupport) {
-      //   reject("current browser doesn't support performance.");
-      //   return;
-      // }
       setTimeout(() => {
         if (stop) {
-          this._stopObserver();
+          this.stopObserver();
         }
-        this.$data.fst.end = this.$data.fst.start + this.$data.fst.duration;
-        resolve(this.$data.fst);
+        this.updateFspTime({ end: this.$data.fspt.start + this.$data.fspt.duration })
+        resolve(this.$data.fspt);
       }, delay);
     });
   }
@@ -131,15 +127,11 @@ class FstPerform {
       return;
     }
     return new Promise((resolve, reject) => {
-      // if (!isSupport) {
-      //   reject("current browser doesn't support performance.");
-      //   return;
-      // }
       setTimeout(() => {
         if (stop) {
-          this._stopObserver();
+          this.stopObserver();
         }
-        const data = [...this._resourcePerfList.values()]
+        const data = [...this._resourceList.values()]
           .filter((item) => format.test(item.name))
           .map((item) => ({
             fetchStart: item.fetchStart,
@@ -157,8 +149,8 @@ class FstPerform {
           );
         const { start = 0, end = 0, request } = data;
         resolve({
-          start: start + this.$data.fst.start,
-          end: end + this.$data.fst.start,
+          start: start + this.$data.fspt.start,
+          end: end + this.$data.fspt.start,
           duration: end - start,
           request
         });
@@ -166,23 +158,18 @@ class FstPerform {
     });
   }
   reopen(ele = document) {
-    // if (!isSupport) {
-    //   warn("current browser doesn't support performance.");
-    //   return;
-    // }
     this._stopFlag = false;
-    this._updateFstStart();
-    this._setFstDur(0);
-    this._imgResourceList.clear();
-    this._resourcePerfList.clear();
-    // 启动子树监听
+    this.updateFspTime({ start: performance.now(), duration: 0 })
+    this._imgUrlList.clear();
+    this._resourceList.clear();
+    // listening subtree
     this.$muo.observe(ele, {
       childList: true,
       subtree: true
     });
-    // 启动资源请求监听
+    // listening rescorce performace
     this.$perf.observe({ entryTypes: ['resource'] });
   }
 }
 
-export default new FstPerform()
+export default new FspPerform()

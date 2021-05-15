@@ -1,27 +1,27 @@
-## first-screen-time
-统计首屏渲染时间（渲染完成），自动计算，无感植入。
+## first-screen-paint
+Obtain the web page first screen pain(fsp) time automatically, non-implanted.
 
-## 安装
+## install
 ```shell
-npm install first-screen-time --save
+npm install first-screen-paint --save
 ```
 
 ## Demo
 ```shell
-cd first-screen-time
+cd first-screen-paint
 npm install
 npm run dev
 ```
 
-## 使用
+## Usage
 ```js
-// 在入口文件顶部引入
-import 'first-screen-time'
+// import as a module
+import 'first-screen-paint'
 
-// or 下载引入
+// or add as a script
 <script src="./first-screen-time/dist/index.js"></script>
 
-// 在任意地方获取统计时间
+// Obtain the FSP time anywhere
 if (window.$fstp) {
   $fstp.getFirstScreenTime().then((data) => {
     console.log(data)

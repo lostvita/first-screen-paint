@@ -1,13 +1,13 @@
-import fstp from './core'
+import fspPerform from './core'
 import { isSupport } from './util'
 
 ;(function() {
   if (!isSupport()) return
-  const $fstp = {
+  const $fsp = {
     version: '1.0.0',
-    getFirstScreenTime: fstp.getFirstScreenTime.bind(fstp),
-    getRequestTime: fstp.getRequestTime.bind(fstp),
-    reopen: fstp.reopen.bind(fstp)
+    getFirstScreenTime: fspPerform.getFirstScreenTime.bind(fspPerform),
+    getRequestTime: fspPerform.getRequestTime.bind(fspPerform),
+    reopen: fspPerform.reopen.bind(fspPerform)
   }
-  window.$fstp = $fstp;
+  window.$fsp = $fsp;
 })();
