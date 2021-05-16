@@ -12,8 +12,8 @@ export const warn = (info) => {
 export const getImgSrc = (dom) => {
   const imgTagReg = /img/i;
   const imgBgUrlReg = /(?<=^url\([\'\"]?).+(?=[\'\"]?\)$)/g;
-  if (imgTagReg.test(dom)) {
-    entry.target.getAttribute('data-src')
+  if (imgTagReg.test(dom.nodeName)) {
+    return dom.getAttribute('data-src')
   } else {
     const computedStyle = window.getComputedStyle(dom);
     const bgImg = computedStyle.getPropertyValue('background-image') || computedStyle.getPropertyValue('background');

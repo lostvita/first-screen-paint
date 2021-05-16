@@ -5,27 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>first screen paint</title>
   <style>
-    body{ margin: 0; padding: 50px 150px; background: url(http://qqpublic.qpic.cn/qq_public/0/0-2954559809-FFB281096A38B7D07CA6D0D2425F2AC7/0?fmt=jpg&size=25&h=506&w=900&ppv=1/0); }
+    body{ margin: 0; padding: 50px 350px; background: url(https://w.wallhaven.cc/full/28/wallhaven-281d5y.png); background-size: contain; }
     .app{ padding: 0; margin: 0; }
-    .part{ width: 100%; min-height: 370px; }
+    .part{ width: 100%; min-height: 370px; text-align: center; }
     .one{ background-color: tomato; }
-    .two{ background-color: white; }
-    .three{ background: url(https://macjpeg.macsc.com/macw/pic/202004/01162816_b9f0b1fa3e.jpeg); }
+    .two{ background-color: powderblue; }
+    .three{ background: url(https://w.wallhaven.cc/full/m9/wallhaven-m9q6e9.jpg); background-size: contain; }
     .four{ background: orange; }
-    img{ width: 100%; }
+    img{ max-width: 100%; }
   </style>
   <script src="./dist/index.js"></script>
 </head>
 <body>
   <div class="app">
-    <div class="part one">one part<img data-src="https://imgcache.dealmoon.com/fsvrugc.dealmoon.com/ugc/329/3e0/005/7195a20621450130aaa9abc.jpg_1280_1280_3_ba97.jpg" src="https://imgcache.dealmoon.com/fsvrugc.dealmoon.com/ugc/329/3e0/005/7195a20621450130aaa9abc.jpg_1280_1280_3_ba97.jpg" alt="" /></div>
+    <div class="part one">part one<img data-src="https://w.wallhaven.cc/full/x8/wallhaven-x86eko.jpg" src="https://w.wallhaven.cc/full/x8/wallhaven-x86eko.jpg" alt="" /></div>
     <div class="part two">part two</div>
     <div class="part three">part three</div>
-    <div class="part four">part four</div>
+    <div class="part four">part four <img data-src="https://img.zzzmh.cn/origin/d822e44f880411ebb6edd017c2d2eca2.jpg_thumbs" src="https://img.zzzmh.cn/origin/d822e44f880411ebb6edd017c2d2eca2.jpg_thumbs" alt=""></div>
   </div>
   <script>
     if (window.$fsp) {
-      $fsp.getFirstScreenTime(10000).then((data) => {
+      $fsp.getFirstScreenTime(60000).then((data) => {
         console.log(data)
       })
     }
