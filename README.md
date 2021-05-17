@@ -1,5 +1,5 @@
 ## first-screen-paint
-Obtain the web page first screen paint(fsp) time automatically, non-implanted.
+Obtain the web page first screen paint(fsp) time automatically, non-implanted. [blog](https://github.com/qiudongwei/blog/issues/30)
 
 ## install
 ```shell
