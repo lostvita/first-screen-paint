@@ -22,8 +22,8 @@ import 'first-screen-paint'
 <script src="./first-screen-paint/dist/index.js"></script>
 
 // Obtain the FSP time anywhere
-if (window.$fstp) {
-  $fstp.getFirstScreenTime().then((data) => {
+if (window.$fsp) {
+  $fsp.getFirstScreenTime().then((data) => {
     console.log(data)
   })
 }
